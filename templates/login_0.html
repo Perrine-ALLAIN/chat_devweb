@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        html, body {
+      margin: 0;
+      height: 100%;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrapper {
+      width: 80vw;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid black;
+    }
+    input {
+      padding: 8px;
+      font-size: 1rem;
+    }
+
+    </style>
+    </head>
+    <body>
+    <div class="wrapper">
+        <div id = "login">
+            <input id="name" placeholder = "name">
+            <input id = "password" placeholder = "password" >
+        </div>
+        <div class = button>
+            <button id="login-btn" onclick = "authenticate('/login')">Login</button>
+            <button id="register-btn" onclick = "authenticate('/register')">Register</button>
+
+        </div>
+        <div id = "error"></div>
+    </div>
+    <script>
+        const nameInput = document.getElementById("name");
+        const passwordInput = document.getElementById("password");
+        const errorDiv = document.getElementById("error");
+        
+        async function authenticate(path) {
+            const name = nameInput.value;
+            const password = passwordInput.value;
+
+            try {const response = await fetch(path, {
+                method : "POST",
+                headers : { "Content-Type" : "application/json"},
+                body : JSON.stringify({user_name :name, password : password})
+            });
+
+            if (response.ok) {
+                window.location.href = "/chat";
+            } else {
+                const errorData = await response.json();
+                errorDiv.innerText = errorData.detail || "Une erreur s'est produite";
+            }
+            } catch (error){
+                errorDiv.innerText = "Network error";
+            }
+        }
+    </script>
+    </body>
+</html>
